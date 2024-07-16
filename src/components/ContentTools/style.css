@@ -1,0 +1,13 @@
+.searchAdd{
+    float: right;
+}
+.search{
+    height:50px;
+    width: 60%;
+    display: inline-block;
+}
+.add{
+    width:calc(40% - 20px);
+    margin-left:10px;
+    margin-right:10px;
+}

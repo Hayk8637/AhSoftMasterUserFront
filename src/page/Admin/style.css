@@ -1,0 +1,35 @@
+
+.slider {
+      width: 300px !important;
+}
+.demo-logo-vertical {
+    height: 40px;
+    width: auto;
+    margin: 15px;
+    background-image: url("../../assets/img//logo.png");
+    background-size: contain;
+    background-position: center;
+    backface-visibility: hidden;
+    background-repeat: no-repeat;
+}
+.demo-logo {
+    height: 72px    ;
+}
+.content {
+    height: 100%;
+}
+
+:where(.css-dev-only-do-not-override-11xg00t).ant-layout .ant-layout-sider-zero-width-trigger {
+    color: black;
+    background: none;
+    top: 10px;
+    left: 15px; 
+}
+@media screen and (max-width: 995px) {
+    .menuLogo {
+        display: none;
+    }
+}
+.ant-layout-sider{
+    background: none !important;
+}

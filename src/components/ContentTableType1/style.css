@@ -1,0 +1,15 @@
+.table { 
+    width: 100%;
+    height: calc(100vh - 79px);
+    padding: 0;
+    padding-top: 10px;
+    margin: 0;
+    overflow-y: auto;
+}
+.pagination {
+    float: right;
+    bottom: 0;
+    padding-right: 20px;
+    padding-top: 20px;
+    cursor:pointer;
+}
