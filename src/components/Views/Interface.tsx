@@ -15,10 +15,10 @@ export interface ICompany{
 }
 export interface IMasterUser {
     id: string;
-    username: string;
-    roll: string;
+    firstName: string;
+    lastName: string;
     email: string;
-    editable: boolean;
+    // editable: boolean;
 }
 
 export interface IBranch {

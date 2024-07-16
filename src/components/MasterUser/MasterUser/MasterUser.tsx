@@ -1,132 +1,151 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IMasterUser } from "../../Views/Interface";
-import { Button, Input } from "antd";
-import MasterUserTable from "../MasterUserTable/MasterUserTable";
+import { Button, Input, Pagination, PaginationProps, Table } from "antd";
+import axios from "axios";
+import ToolsMasterUser from "../ToolsMasterUser/ToolsMasterUser";
+import './style.css';
 
-const MasterUser:React.FC = () => {
-  const [data, setData] = useState<IMasterUser[]>([
+const MasterUser: React.FC = () => {
+  const [data, setData] = useState<IMasterUser[]>([]);
+  const [current, setCurrent] = useState(1);
+  const [pageSize, setPageSize] = useState(20);
+  const [total, setTotal] = useState(0);
+
+  const columns: any = [
     {
-      id: '1',
-      username: 'John Doe',
-      roll: 'Title 1',
-      email: 'john@example.com',
+      title: 'ID',
+      dataIndex: 'id',
+      key: 'id',
       editable: true,
+      render: (text: string, record: IMasterUser) => {
+        return isEditing(record) ? (
+          <Input defaultValue={record.id} />
+        ) : (
+          text
+        );
+      },
     },
     {
-      id: '2',
-      username: 'Jane Smith',
-      roll: 'Title 2',
-      email: 'jane@example.com',
-      editable: false,
+      title: 'FirstName',
+      dataIndex: 'firstName',
+      key: 'firstName',
+      editable: true,
+      render: (text: string, record: IMasterUser) => {
+        return isEditing(record) ? (
+          <Input defaultValue={record.firstName} />
+        ) : (
+          text
+        );
+      },
     },
-    ...Array.from({ length: 148 }, (_, index) => ({
-      id: (index + 3).toString(),
-      username: index % 2 === 0 ? 'John Doe' : 'Jane Smith',
-      roll: `Title ${index + 3}`,
-      email: index % 2 === 0 ? 'john@example.com' : 'jane@example.com',
-      editable: index % 2 === 0,
-    })),
-  ]);
-      const columns: any[] = [
-        {
-          title: 'ID',
-          dataIndex: 'id',
-          key: 'id',
-          editable: true,
-          render: (text: string, record: IMasterUser) => {
-            return isEditing(record) ? (
-              <Input defaultValue={record.username} />
-            ) : (
-              text
-            );
-          },
-        },
-        {
-          title: 'Username',
-          dataIndex: 'username',
-          key: 'username',
-          editable: true,
-          render: (text: string, record: IMasterUser) => {
-            return isEditing(record) ? (
-              <Input defaultValue={record.username} />
-            ) : (
-              text
-            );
-          },
-        },
-        {
-          title: 'Position/Roll',
-          dataIndex: 'roll',
-          key: 'roll',
-          editable: true,
-          render: (text: string, record: IMasterUser) => {
-            return isEditing(record) ? (
-              <Input defaultValue={record.username} />
-            ) : (
-              text
-            );
-          },
-        },
-        {
-          title: 'Email',
-          dataIndex: 'email',
-          key: 'email',
-          editable: true,
-          render: (text: string, record: IMasterUser) => {
-            return isEditing(record) ? (
-              <Input defaultValue={record.username} />
-            ) : (
-              text
-            );
-          },
-        },
-        
-        {
-          title: '',
-          key: 'actions',
-          fixed: 'right',
-          width: 200,
-          render: (record: IMasterUser) => {
-            const editable = isEditing(record);
-            return editable ? (
-              <span>
-                <Button type="primary" onClick={() => save(record)}>Save</Button>
-                <Button onClick={cancel}>Cancel</Button>
-              </span>
-            ) : (
-              <span>
-                <Button type="link" onClick={() => edit(record)}>Edit</Button>
-                <Button type="link" onClick={() => handleDelete(record)}>Delete</Button>
-              </span>
-            );
-          },
-        },
-      ];
-        //Editing company
-        const [editingKey, setEditingKey] = useState('');
-        const isEditing = (record: IMasterUser) => record.id === editingKey;
-        const edit = (record: IMasterUser) => {
-          setEditingKey(record.id);
-        };
-        const cancel = () => {
-          setEditingKey('');
-        };
-        const save = (record: IMasterUser) => {
-          const newData = [...data];
-          const index = newData.findIndex(item => record.id === item.id);
-          if (index > -1) {
-            const item = newData[index];
-            newData.splice(index, 1, { ...item });
-            setData(newData);
-            setEditingKey('');
-          }
-        };
-          const handleDelete = (record: IMasterUser) => {
-          setData(prevData => prevData.filter(item => item.id !== record.id));
-        };
-        
-    return <>
-        <MasterUserTable  data={data} columns={columns} />
-    </>
+    {
+      title: 'LastName',
+      dataIndex: 'lastName',
+      key: 'lastName',
+      editable: true,
+      render: (text: string, record: IMasterUser) => {
+        return isEditing(record) ? (
+          <Input defaultValue={record.lastName} />
+        ) : (
+          text
+        );
+      },
+    },
+    {
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email',
+      editable: true,
+      render: (text: string, record: IMasterUser) => {
+        return isEditing(record) ? (
+          <Input defaultValue={record.email} />
+        ) : (
+          text
+        );
+      },
+    },
+    {
+      title: '',
+      key: 'actions',
+      fixed: 'right',
+      width: 200,
+      render: (record: IMasterUser) => {
+        const editable = isEditing(record);
+        return editable ? (
+          <span>
+            <Button type="primary" onClick={() => save(record)}>Save</Button>
+            <Button onClick={cancel}>Cancel</Button>
+          </span>
+        ) : (
+          <span>
+            <Button type="link" onClick={() => edit(record)}>Edit</Button>
+            <Button type="link" onClick={() => handleDelete(record)}>Delete</Button>
+          </span>
+        );
+      },
+    },
+  ];
+
+  const fetchData = async (page: number, pageSize: number) => {
+    try {
+      const response = await axios.get('http://87.241.134.159:3000/MasterUser', {
+        params: {
+          Page: page,
+          CountPerPage: pageSize
+        }
+      });
+      setData(response.data.items); // assuming response data contains an array of items
+      setTotal(response.data.totalCount); // assuming response data contains total count of items
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData(current, pageSize);
+  }, [current, pageSize]);
+
+  const onChange: PaginationProps['onChange'] = (page, pageSize) => {
+    setCurrent(page);
+    setPageSize(pageSize);
+  };
+
+  // Editing company
+  const [editingKey, setEditingKey] = useState<string>('');
+  const isEditing = (record: IMasterUser) => record.id === editingKey;
+  const edit = (record: IMasterUser) => {
+    setEditingKey(record.id);
+  };
+  const cancel = () => {
+    setEditingKey('');
+  };
+  const save = (record: IMasterUser) => {
+    const newData = [...data];
+    const index = newData.findIndex(item => record.id === item.id);
+    if (index > -1) {
+      const item = newData[index];
+      newData.splice(index, 1, { ...item });
+      setData(newData);
+      setEditingKey('');
+    }
+  };
+  const handleDelete = (record: IMasterUser) => {
+    setData(prevData => prevData.filter(item => item.id !== record.id));
+  };
+
+  return (
+    <div className='MasterUsertable'>
+      <ToolsMasterUser />
+      <Table columns={columns} dataSource={data} scroll={{ y: 'calc(100vh - 260px )' }} pagination={false} />
+      <Pagination
+        className='pagination'
+        pageSizeOptions={[10, 20, 50]}
+        current={current}
+        onChange={onChange}
+        pageSize={pageSize}
+        total={total}/>
+    </div>
+  );
 }
+
 export default MasterUser;

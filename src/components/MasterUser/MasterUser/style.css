@@ -1,0 +1,8 @@
+.MasterUsertable { 
+    width: 100%;
+    height: calc(100vh - 79px);
+    padding: 0;
+    padding-top: 10px;
+    margin: 0;
+    overflow-y: auto;
+}
