@@ -25,8 +25,8 @@ function getItem(
 }
 
 const items: MenuProps['items'] = [
-  getItem(<Link to="/admin/masterUser">MasterUser</Link>, 'sub2', <PartitionOutlined />),
-  getItem(<Link to="/admin/partners">Partners</Link>, 'sub1', <PartitionOutlined />),
+  getItem(<Link to="/admin/masterUser">MasterUser</Link>, 'sub1', <PartitionOutlined />),
+  getItem(<Link to="/admin/partners">Partners</Link>, 'sub2', <PartitionOutlined />),
   
   // getItem('Navigation One', 'sub2', <MailOutlined />, [
   //   getItem('Item 1', 'g1', null, [getItem('Option 1', '1'), getItem('Option 2', '2')], 'group'),
@@ -45,22 +45,23 @@ const items: MenuProps['items'] = [
   // ])
 ];  
 
-
 const LeftNavigation: React.FC = () => {
   const onClick: MenuProps['onClick'] = (e) => {
-    console.log('click ', e);
+    // console.log('click ', e);
   };
-    return<>
-      <div className='logoShow'  >
-        <Menu
-          className='menu'
-          onClick={onClick}
-          defaultSelectedKeys={['0']}
-          defaultOpenKeys={['1']}
-          mode="inline"
-          items={items}
-        />
-      </div>
-    </>
+  
+  return (
+    <div className='logoShow'>
+      <Menu
+        className='menu'
+        onClick={onClick}
+        defaultSelectedKeys={['sub1']}
+        defaultOpenKeys={['sub1']}
+        mode="inline"
+        items={items}
+      />
+    </div>
+  );
 }
-export default LeftNavigation
+
+export default LeftNavigation;

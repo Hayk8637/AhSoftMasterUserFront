@@ -13,9 +13,10 @@ const Content:React.FC = () => {
     const length = path.split('/').length;
     return<>
           <div className='content'>
-            {path === '/admin/partners' && <Partners />}
+            {path === '/admin' && <MasterUser />}
             {path === '/admin/masterUser' && <MasterUser />}
             {path === '/admin/masterUser/add' && <AddMasterUser />}
+            {path === '/admin/partners' && <Partners />}
             {path === '/admin/accountSettings' && <AccountSettings />}
             {path === `/admin/partners/${location[length - 2]}/branches` && <CompanyBranches />}
             {path === `/admin/partners/${location[length - 4]}/branches/${location[length-2]}/menues` && <CompanyBranchMenues/>}

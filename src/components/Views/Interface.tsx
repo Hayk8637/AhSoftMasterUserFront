@@ -18,7 +18,6 @@ export interface IMasterUser {
     firstName: string;
     lastName: string;
     email: string;
-    // editable: boolean;
 }
 
 export interface IBranch {

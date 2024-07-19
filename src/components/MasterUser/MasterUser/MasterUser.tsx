@@ -16,6 +16,7 @@ const MasterUser: React.FC = () => {
       title: 'ID',
       dataIndex: 'id',
       key: 'id',
+      width: 150,
       editable: true,
       render: (text: string, record: IMasterUser) => {
         return isEditing(record) ? (
@@ -29,6 +30,7 @@ const MasterUser: React.FC = () => {
       title: 'FirstName',
       dataIndex: 'firstName',
       key: 'firstName',
+      width: 150,
       editable: true,
       render: (text: string, record: IMasterUser) => {
         return isEditing(record) ? (
@@ -43,6 +45,7 @@ const MasterUser: React.FC = () => {
       dataIndex: 'lastName',
       key: 'lastName',
       editable: true,
+      width: 150,
       render: (text: string, record: IMasterUser) => {
         return isEditing(record) ? (
           <Input defaultValue={record.lastName} />
@@ -55,6 +58,7 @@ const MasterUser: React.FC = () => {
       title: 'Email',
       dataIndex: 'email',
       key: 'email',
+      width: 150,
       editable: true,
       render: (text: string, record: IMasterUser) => {
         return isEditing(record) ? (
@@ -94,8 +98,8 @@ const MasterUser: React.FC = () => {
           CountPerPage: pageSize
         }
       });
-      setData(response.data.items); // assuming response data contains an array of items
-      setTotal(response.data.totalCount); // assuming response data contains total count of items
+      setData(response.data.map((item: IMasterUser) => ({ ...item, key: item.id }))); 
+      setTotal(response.data.totalCount);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -108,6 +112,7 @@ const MasterUser: React.FC = () => {
   const onChange: PaginationProps['onChange'] = (page, pageSize) => {
     setCurrent(page);
     setPageSize(pageSize);
+    console.log(fetchData);
   };
 
   // Editing company
